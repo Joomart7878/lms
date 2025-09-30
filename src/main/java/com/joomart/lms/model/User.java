@@ -3,6 +3,7 @@ package com.joomart.lms.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "lms_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,8 @@ public class User {
         this.username = username;
         this.passwordHash = passwordHash;
     }
+
+    public User() {}
 
     public Long getId() {
         return id;
