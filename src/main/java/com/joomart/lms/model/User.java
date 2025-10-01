@@ -16,6 +16,9 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     //Constructors, Getter, Setter
     public User(String username, String passwordHash) {
         this.username = username;
@@ -36,17 +39,19 @@ public class User {
         return passwordHash;
     }
 
+    public String getEmail() { return email; }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public void setUsername(String username) { this.username = username; }
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
+
+    public void setEmail(String email) { this.email = email; }
 
     @Override
     public String toString() {
