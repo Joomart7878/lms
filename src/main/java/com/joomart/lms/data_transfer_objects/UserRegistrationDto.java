@@ -7,6 +7,7 @@ package com.joomart.lms.data_transfer_objects;
 public class UserRegistrationDto {
     private String username;
     private String password;
+    private String email;
 
     public String getUsername() {
         return username;
@@ -16,6 +17,11 @@ public class UserRegistrationDto {
         return password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -23,4 +29,6 @@ public class UserRegistrationDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setEmail(String email) { this.email = email; }
 }
