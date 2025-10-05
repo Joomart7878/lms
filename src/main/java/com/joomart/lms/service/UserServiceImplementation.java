@@ -1,6 +1,7 @@
 package com.joomart.lms.service;
 
 import com.joomart.lms.data_transfer_objects.UserRegistrationDto;
+import com.joomart.lms.exception.UsernameAlreadyExistsException;
 import com.joomart.lms.model.User;
 import com.joomart.lms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +31,23 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User registerUser(UserRegistrationDto userData) {
         String username = userData.getUsername().trim();
-        String rawPassword = userData.getPassword().trim();
+        String password = userData.getPassword().trim();
+        String email = userData.getEmail().trim();
 
         // Check for existing username (business logic validation)
         if (userRepository.findByUsername(username).isPresent()) {
             // Throw exception to be handled by the controller
-            throw new RuntimeException("Username already taken: " + username);
+            throw new UsernameAlreadyExistsException("Username already taken: " + username);
         }
 
         User newUser = new User();
         newUser.setUsername(username);
         // Hash the CLEANED password for secure storage
-        newUser.setPasswordHash(passwordEncoder.encode(rawPassword));
+        newUser.setPasswordHash(passwordEncoder.encode(password));
+        newUser.setEmail(email);
 
         return userRepository.save(newUser);
+
     }
 
     /**
