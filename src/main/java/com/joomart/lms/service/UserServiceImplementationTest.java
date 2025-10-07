@@ -66,5 +66,16 @@ class UserServiceImplementationTest {
         verify(userRepository, never()).save(any());
     }
 
+    @Test
+    void findByUsername_found() {
+        User u = new User();
+        u.setUsername("sam");
+        when(userRepository.findByUsername("sam")).thenReturn(Optional.of(u));
+
+        Optional<User> result = userServiceImplementation.findByUsername("sam");
+        assertTrue(result.isPresent());
+        assertEquals("sam", result.get().getUsername());
+    }
+
 
 }
