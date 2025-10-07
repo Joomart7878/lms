@@ -51,5 +51,20 @@ class UserServiceImplementationTest {
         verify(userRepository).save(any(User.class));
     }
 
+    @Test
+    void registerUser_usernameExists_throws() {
+        UserRegistrationDto dto = new UserRegistrationDto();
+        dto.setUsername("bob"); // must match what registerUser reads
+        dto.setPassword("pw");
+        dto.setEmail("bob@example.com");
+
+        // Mock the correct repository method
+        when(userRepository.findByUsername("bob")).thenReturn(Optional.of(new User()));
+
+        assertThrows(UsernameAlreadyExistsException.class,
+                () -> userServiceImplementation.registerUser(dto));
+        verify(userRepository, never()).save(any());
+    }
+
 
 }
