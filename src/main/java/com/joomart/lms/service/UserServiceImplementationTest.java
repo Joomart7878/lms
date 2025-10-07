@@ -77,5 +77,11 @@ class UserServiceImplementationTest {
         assertEquals("sam", result.get().getUsername());
     }
 
+    @Test
+    void findByUsername_notFound_throws() {
+        when(userRepository.findByUsername("unknown")).thenReturn(Optional.empty());
 
+        Optional<User> result = userServiceImplementation.findByUsername("unknown");
+        assertTrue(result.isEmpty(), "Expected Optional to be empty when username not found");
+    }
 }
