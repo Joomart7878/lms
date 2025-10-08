@@ -1,9 +1,9 @@
 package com.joomart.lms.controller;
 
 import com.joomart.lms.data_transfer_objects.UserLoginDto;
+import com.joomart.lms.service.UserService;
 import com.joomart.lms.data_transfer_objects.UserRegistrationDto;
 import com.joomart.lms.model.User;
-import com.joomart.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +29,16 @@ public class AuthController {
      * @return 201 Created on success, or 409 Conflict if username is taken.
      */
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<User> register(@RequestBody UserRegistrationDto registrationDto) {
         try {
             User newUser = userService.registerUser(registrationDto);
-            return new ResponseEntity<>("User registered successfully with ID: " + newUser.getId(), HttpStatus.CREATED);
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             // This handles the "Username already taken" scenario from the service layer
             if (e.getMessage().contains("Username already taken")) {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT);
             }
-            return new ResponseEntity<>("Registration failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
