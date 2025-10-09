@@ -12,20 +12,31 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
+    # Use 'main' instead of 'master' if your main branch is named 'main'
     branches: [ "master" ]
 
 jobs:
   build:
+    # --- FIX 1: Grant Permissions ---
+    # This grants the default GITHUB_TOKEN the necessary write access
+    # to submit dependency data and run other security checks.
+    permissions:
+      contents: read # Read permissions are standard for checkout
+      # IMPORTANT: If the error persists, change 'contents: read' to 'contents: write'
+      # But usually 'read' is enough when paired with the default action's setup.
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+      
     - name: Set up JDK 24
       uses: actions/setup-java@v4
       with:
         java-version: '24'
         distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
+        cache: maven # This line triggers the dependency submission attempt
+
+    - name: Build and Run Tests
+      # The 'package' goal includes compiling the code and running all unit tests.
       run: mvn -B package --file pom.xml
