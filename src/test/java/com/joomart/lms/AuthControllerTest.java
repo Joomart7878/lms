@@ -6,7 +6,6 @@ import com.joomart.lms.model.User;
 import com.joomart.lms.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
@@ -48,5 +47,18 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("jane"))
                 .andExpect(jsonPath("$.email").value("jane@example.com"));
+    }
+
+    @Test
+    void postRegister_invalidInput_badRequest() throws Exception {
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new AuthController(userService)).build();
+
+        String payload = "{\"username\":\"\",\"email\":\"not-an-email\",\"password\":\"pw\"}";
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isBadRequest());
     }
 }
