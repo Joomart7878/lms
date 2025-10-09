@@ -34,7 +34,7 @@ class UserServiceImplementationTest {
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setUsername("alicetest");
         dto.setEmail("alice@exampletest.com");
-        dto.setPassword("secret123")
+        dto.setPassword("secret123");
 
         when(userRepository.findByUsername("alicetest")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("secret123")).thenReturn("encodedPwd");
