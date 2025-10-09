@@ -1,4 +1,4 @@
-package com.joomart.lms.service;
+package com.joomart.lms;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,6 +8,7 @@ import com.joomart.lms.data_transfer_objects.UserRegistrationDto;
 import com.joomart.lms.repository.UserRepository;
 import com.joomart.lms.exception.UsernameAlreadyExistsException; // adapt if different
 
+import com.joomart.lms.service.UserServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
