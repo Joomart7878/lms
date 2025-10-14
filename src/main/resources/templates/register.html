@@ -1,0 +1,77 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Register</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+<h2>Register</h2>
+<div id="messages"></div>
+
+<form id="registerForm" th:object="${userRegistrationDto}" onsubmit="return false;">
+    <label>Username</label>
+    <input th:field="*{username}" id="username" type="text"/>
+    <label>Email</label>
+    <input th:field="*{email}" id="email" type="email"/>
+    <label>Password</label>
+    <input th:field="*{password}" id="password" type="password"/>
+    <button id="submitBtn">Register</button>
+</form>
+
+<script>
+    const messages = document.getElementById('messages');
+
+    function showMessage(msg, isError = true){
+      messages.innerHTML = '<div class="'+(isError ? 'error' : 'success')+'">'+msg+'</div>';
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+      messages.innerHTML = '';
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username) { showMessage('Username is required'); return; }
+      if (!email.includes('@')) { showMessage('Valid email required'); return; }
+      if (password.length < 6) { showMessage('Password must be at least 6 chars'); return; }
+
+      const payload = { username, email, password };
+
+      const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+      try {
+        const resp = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            [csrfHeader]: csrfToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (resp.ok) {
+          showMessage('Registration successful! You can now log in.', false);
+          document.getElementById('registerForm').reset();
+        } else if (resp.status === 400 || resp.status === 422) {
+          const err = await resp.json();
+          if (err && err.errors) {
+            showMessage(err.errors.map(e => e.field + ': ' + e.message).join('<br/>'));
+          } else {
+            const body = await resp.text();
+            showMessage(body || 'Validation error');
+          }
+        } else {
+          const body = await resp.text();
+          showMessage('Error: ' + body);
+        }
+      } catch (e) {
+        showMessage('Network error: ' + e.message);
+      }
+    });
+</script>
+</body>
+</html>

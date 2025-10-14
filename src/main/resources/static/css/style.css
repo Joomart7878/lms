@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; padding: 20px; }
+.error { color: #a94442; background: #f2dede; padding: 10px; border-radius: 4px; }
+.success { color: #155724; background: #d4edda; padding: 10px; border-radius: 4px; }
+label { display:block; margin-top: 8px; font-weight: bold; }
+input { padding:6px; width: 300px; }
